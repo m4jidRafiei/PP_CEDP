@@ -261,7 +261,7 @@ class CEDP():
 
         return no_matching, bk_act, fa, ca, ba, R1_ka, R2_ka
 
-    def calc_FCB_anonymity(self, log_name1, log_name2, event_attributes, life_cycle, all_life_cycle, sensitive, time_accuracy, n, bk_length, result_log_name, results_dir = "./Results",
+    def calc_FCB_anonymity(self, log_name1, log_name2, event_attributes, life_cycle, all_life_cycle, sensitive, time_accuracy, n, bk_length, result_log_name = "", results_dir = "",
                            from_time_days =0, to_time_days=0, multiprocess=True):
 
         log1 = xes_importer_factory.apply(log_name1)
@@ -303,11 +303,12 @@ class CEDP():
         bk_candidate_iter = itertools.product(uniq_char, repeat=bk_length)
         bk_candidate = list(bk_candidate_iter)
 
-        results_dir = results_dir
-        if not os.path.exists(results_dir):
-            os.makedirs(results_dir)
-        file_name = "Result_" + result_log_name + "_bk_length_" + str(bk_length) + "_n_" + str(n) + ".xlsx"
-        result_file = os.path.join(results_dir, file_name)
+        result_file = ""
+        if results_dir != "" and result_log_name != "":
+            if not os.path.exists(results_dir):
+                os.makedirs(results_dir)
+            file_name = "Result_" + result_log_name + "_bk_length_" + str(bk_length) + "_n_" + str(n) + ".xlsx"
+            result_file = os.path.join(results_dir, file_name)
 
         columns = ['bk', 'R1-K', 'R2-K', 'FA', 'CA', 'BA']
         df_result = pd.DataFrame(columns=columns)
@@ -358,12 +359,16 @@ class CEDP():
 
         df_result_last_row = {'bk': "Event Log", 'R1-K': R1_KA, 'R2-K': R2_KA, 'FA': FA, 'CA': CA, 'BA': BA}
         df_result = df_result.append(df_result_last_row, ignore_index=True)
-        writer = ExcelWriter(result_file)
-        df_result.to_excel(writer, 'bk_length_' + str(bk_length) + "-n_" + str(n))
-        writer.save()
+
+        if result_file != "":
+            writer = ExcelWriter(result_file)
+            df_result.to_excel(writer, 'bk_length_' + str(bk_length) + "-n_" + str(n))
+            writer.save()
 
         las_line = "Result for Event Log, R1-KA:%d, R2-KA:%d, FA:%d, CA:%d, BA:%d" % (R1_KA, R2_KA, FA, CA, BA)
         print(las_line)
+
+        return R1_KA, R2_KA, FA, CA, BA
 
 
     def chunkIt(self, data, num):
