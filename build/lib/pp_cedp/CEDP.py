@@ -1,4 +1,4 @@
-import pylcs
+# import pylcs
 from pm4py.objects.log.importer.xes import factory as xes_importer_factory
 from pm4py.objects.log.util import sorting
 from pp_cedp.Utils import Utils
@@ -14,9 +14,8 @@ class CEDP():
     def __init__(self):
         self = self
 
-
-    def pylcs_len(self, A, B):
-        return pylcs.lcs(A, B)
+    # def pylcs_len(self, A, B):
+    #     return pylcs.lcs(A, B)
 
     def lcs_len(self, A, B):
         # find the length of the strings
@@ -85,14 +84,14 @@ class CEDP():
     def get_matching_set(self,simple_log,bk,n):
         matching_set ={}
         for key,value in simple_log.items():
-            if n >= len(bk) - self.pylcs_len(bk,value['trace']):
+            if n >= len(bk) - self.lcs_len(bk,value['trace']):
                 matching_set[key] = value
         return matching_set
 
     def get_matching_set_df(self,df,bk,n):
         df_matching = pd.DataFrame().reindex(columns=df.columns)
         for index, row in df.iterrows():
-            if n >= len(bk) - self.pylcs_len(bk,row['trace']):
+            if n >= len(bk) - self.lcs_len(bk,row['trace']):
                 df_matching = df_matching.append(row)
         return df_matching
 

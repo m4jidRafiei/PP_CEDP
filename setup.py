@@ -20,10 +20,9 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
-        'pylcs==0.0.6',
         'pandas>=0.24.2',
         'numpy>=1.18.1',
-        'pm4py==1.2.10'
+        'pm4py>=1.2.10'
     ],
     project_urls={
         'Source': 'https://github.com/m4jidRafiei/PP_CEDP'
